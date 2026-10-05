@@ -1,0 +1,61 @@
+version: 1
+
+deployment:
+  name: flow
+  compatibility_date: "2026-08-29"
+  global_fetch_strictly_public: true
+
+container:
+  instance_type: standard-2
+  max_instances: 1
+  port: 8080
+
+egress:
+  oauth:
+    token_request_timeout: 10s
+    expiry_skew: 30s
+    max_token_request_bytes: 65536
+    max_token_response_bytes: 65536
+    max_token_bytes: 16384
+
+api:
+  auth_secret: RUNNER_API_TOKEN
+  retention: 24h
+
+history:
+  max_verbose_bytes: 26214400
+  max_metric_bytes: 5242880
+  max_lifecycle_bytes: 1048576
+  max_pending_bytes: 8388608
+
+runner:
+  shutdown_grace: 10s
+  max_prompt_bytes: 65536
+  max_prompt_files: 100
+  max_prompt_bundle_bytes: 1048576
+  max_asset_bytes: 5242880
+  max_asset_files: 500
+  max_asset_bundle_bytes: 26214400
+  max_result_bytes: 1048576
+
+artifacts:
+  max_files: 100
+  max_file_bytes: 5242880
+  max_total_bytes: 26214400
+
+memory:
+  max_database_bytes: 26214400
+  persistence_timeout: 2m
+
+interactions:
+  provider: none
+
+observability:
+  traces:
+    enabled: true
+    persist: true
+    head_sampling_rate: 1
+
+logging:
+  events: full
+  max_log_bytes: 240000

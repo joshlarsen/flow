@@ -1,0 +1,47 @@
+{
+  "name": "flow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Single-tenant asynchronous multi-harness agent runner on Cloudflare Containers",
+  "scripts": {
+    "config:generate": "tsx tools/generate-config.ts",
+    "config:check": "tsx tools/generate-config.ts --check",
+    "bundle:sync": "tsx tools/sync-bundle.ts",
+    "env:local": "tsx tools/environment.ts local",
+    "env:prod": "tsx tools/environment.ts prod",
+    "env:status": "tsx tools/environment.ts status",
+    "dev": "tsx tools/dev.ts",
+    "deploy": "tsx tools/deploy.ts",
+    "e2e": "tsx scripts/e2e.ts",
+    "claude:amd64:probe": "tsx tools/claude-amd64-probe.ts",
+    "oauth:google:bootstrap": "tsx tools/google-oauth-bootstrap.ts",
+    "slack:manifest": "tsx tools/generate-slack-manifest.ts",
+    "secrets:sync": "tsx tools/sync-secrets.ts",
+    "typecheck": "pnpm config:generate && tsc --noEmit",
+    "test:worker": "pnpm config:generate && vitest run",
+    "test:runner": "go test ./...",
+    "test": "pnpm test:worker && pnpm test:runner",
+    "check": "pnpm config:check && pnpm typecheck && pnpm test",
+    "docker:build": "pnpm config:generate && docker build --platform linux/amd64 -t flow:local .",
+    "flow": "tsx tools/flow.ts"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "0.3.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260828.1",
+    "@types/node": "24.3.0",
+    "dotenv": "17.2.3",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vitest": "4.1.11",
+    "wrangler": "^4.131.1",
+    "yaml": "2.9.0",
+    "zod": "4.5.4"
+  },
+  "packageManager": "pnpm@12.4.1"
+}
