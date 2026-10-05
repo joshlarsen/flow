@@ -64,17 +64,17 @@ Do not switch production/local by renaming resources manually. Switch profiles, 
 
 All editable sources are committed:
 
-| Path | Purpose |
-| --- | --- |
-| `config/runner.yaml` | Deployment identity, capacity, security and storage limits |
-| `config/catalog.yaml` | Harnesses, providers, model aliases, credentials, routes, plaintext variable names |
-| `config/workflow.yaml` | Ordered steps, defaults, aggregate timeout, schedules, memory and budget policy |
-| `config/prompts/` | UTF-8 Markdown agent prompts |
-| `config/scripts/` | Bundled scripts; command steps may also invoke image tools |
-| `config/skills/` | Bundled agent skills, installed under `.agents/skills/` |
-| `src/` | Worker API, coordinators, lifecycle, history and credential proxy |
-| `internal/runner/` | Go supervisor and ACP harness execution |
-| `tools/` | Code generation, profiles, deployment, client and CLI |
+| Path                   | Purpose                                                                            |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| `config/runner.yaml`   | Deployment identity, capacity, security and storage limits                         |
+| `config/catalog.yaml`  | Harnesses, providers, model aliases, credentials, routes, plaintext variable names |
+| `config/workflow.yaml` | Ordered steps, defaults, aggregate timeout, schedules, memory and budget policy    |
+| `config/prompts/`      | UTF-8 Markdown agent prompts                                                       |
+| `config/scripts/`      | Bundled scripts; command steps may also invoke image tools                         |
+| `config/skills/`       | Bundled agent skills, installed under `.agents/skills/`                            |
+| `src/`                 | Worker API, coordinators, lifecycle, history and credential proxy                  |
+| `internal/runner/`     | Go supervisor and ACP harness execution                                            |
+| `tools/`               | Code generation, profiles, deployment, client and CLI                              |
 
 `pnpm config:generate` produces ignored `src/generated-config.ts` and `.generated/wrangler.jsonc`. Edit YAML, then regenerate; generated files are not configuration sources. There are no configuration overlays. `pnpm config:check` validates YAML, references and workflow policy. `pnpm bundle:sync` also validates actual prompt/script/skill content and sizes.
 
@@ -112,13 +112,13 @@ The image pins ACP adapters and includes Bash, Git, curl, wget, jq, ripgrep, fd,
 
 ### Providers and credentials
 
-| Harness | Supported provider protocols |
-| --- | --- |
-| Pi | OpenAI Responses, Anthropic, xAI, OpenAI-compatible |
-| Codex | OpenAI Responses |
-| Claude Code | Anthropic |
-| OpenCode | OpenAI Responses, Anthropic, OpenAI-compatible |
-| Grok | xAI |
+| Harness     | Supported provider protocols                        |
+| ----------- | --------------------------------------------------- |
+| Pi          | OpenAI Responses, Anthropic, xAI, OpenAI-compatible |
+| Codex       | OpenAI Responses                                    |
+| Claude Code | Anthropic                                           |
+| OpenCode    | OpenAI Responses, Anthropic, OpenAI-compatible      |
+| Grok        | xAI                                                 |
 
 Models are aliases with provider-specific identifiers. Add provider definitions and model mappings directly to the catalog. A Cloudflare AI endpoint uses `{ kind: cloudflare-ai }` and requires an account ID during generation. Direct URL endpoints require HTTPS. No unused provider key is required: secret discovery selects workflow providers, every configured credential route, enabled interaction secrets, and the API token.
 
@@ -129,8 +129,10 @@ A credential-backed API route can use:
 ```yaml
 credentials:
   service:
-    source: { env: SERVICE_AUTH, header: Authorization, value_prefix: "Bearer " }
-    upstream: { header: Authorization, secret: SERVICE_TOKEN, value_prefix: "Bearer " }
+    source:
+      { env: SERVICE_AUTH, header: Authorization, value_prefix: "Bearer " }
+    upstream:
+      { header: Authorization, secret: SERVICE_TOKEN, value_prefix: "Bearer " }
 routes:
   service:
     url_prefix: https://api.example.com/v1
@@ -192,18 +194,18 @@ Signed Slack actions enforce timestamp, team, conversation and allowed-user chec
 
 Every `/v1` operator endpoint requires `Authorization: Bearer <RUNNER_API_TOKEN>` and returns `Cache-Control: no-store`. Slack uses its signed callback protocol. Internal runner callbacks use per-job tokens.
 
-| Method / path | Behavior |
-| --- | --- |
-| `GET /v1/preflight` | Validate active bundle, selected secrets, callback config and R2 read/write access without starting an agent |
-| `POST /v1/jobs` | Start the active workflow; empty body or `{}` only, at most 1024 bytes; returns 202 |
-| `GET /v1/jobs` | Retained jobs, newest first |
-| `GET /v1/jobs/:id` | Status, steps, usage, errors, history state and artifact metadata |
-| `DELETE /v1/jobs/:id` | Request cancellation; finalization may continue briefly |
-| `GET /v1/jobs/:id/events` | Ordered normalized event records |
-| `GET /v1/jobs/:id/traces` | Portable span records, latest completed snapshot per span |
-| `GET /v1/jobs/:id/metrics` | Numeric metric records |
-| `GET /v1/jobs/:id/artifacts/:path` | Download a recorded artifact |
-| `POST /v1/workflow-budget/reconcile` | Refresh active budget policy and wake eligible work |
+| Method / path                        | Behavior                                                                                                     |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `GET /v1/preflight`                  | Validate active bundle, selected secrets, callback config and R2 read/write access without starting an agent |
+| `POST /v1/jobs`                      | Start the active workflow; empty body or `{}` only, at most 1024 bytes; returns 202                          |
+| `GET /v1/jobs`                       | Retained jobs, newest first                                                                                  |
+| `GET /v1/jobs/:id`                   | Status, steps, usage, errors, history state and artifact metadata                                            |
+| `DELETE /v1/jobs/:id`                | Request cancellation; finalization may continue briefly                                                      |
+| `GET /v1/jobs/:id/events`            | Ordered normalized event records                                                                             |
+| `GET /v1/jobs/:id/traces`            | Portable span records, latest completed snapshot per span                                                    |
+| `GET /v1/jobs/:id/metrics`           | Numeric metric records                                                                                       |
+| `GET /v1/jobs/:id/artifacts/:path`   | Download a recorded artifact                                                                                 |
+| `POST /v1/workflow-budget/reconcile` | Refresh active budget policy and wake eligible work                                                          |
 
 Lists return `{items,next_cursor}`. Use `limit` (default 100, maximum 200) and the opaque `cursor` from the prior response. Pages describe live retained state, not a frozen snapshot. Idempotent submissions use a 1–128 character `Idempotency-Key`; the same key and workflow digest resolve to the same retained job, and a changed digest conflicts. Capacity exhaustion returns 429; unavailable configuration/storage returns 503. Expired jobs return 404.
 
