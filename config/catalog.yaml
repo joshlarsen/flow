@@ -1,0 +1,70 @@
+version: 1
+
+environment: {}
+
+credentials:
+  anthropic:
+    source: { header: Authorization, value_prefix: "Bearer " }
+    upstream: { header: x-api-key, secret: ANTHROPIC_API_KEY, value_prefix: "" }
+  openai:
+    source: { header: Authorization, value_prefix: "Bearer " }
+    upstream: { header: Authorization, secret: OPENAI_API_KEY, value_prefix: "Bearer " }
+  xai:
+    source: { header: Authorization, value_prefix: "Bearer " }
+    upstream: { header: Authorization, secret: GROK_API_KEY, value_prefix: "Bearer " }
+
+providers:
+  anthropic:
+    protocol: anthropic
+    endpoint: { kind: url, base_url: https://api.anthropic.com/v1 }
+    credential: anthropic
+    static_headers: {}
+  openai:
+    protocol: openai-responses
+    endpoint: { kind: url, base_url: https://api.openai.com/v1 }
+    credential: openai
+    static_headers: {}
+  xai:
+    protocol: xai
+    endpoint: { kind: url, base_url: https://api.x.ai/v1 }
+    credential: xai
+    static_headers: {}
+
+models:
+  grok-4.6:
+    providers:
+      xai: grok-4.6
+  gpt-5.6-terra:
+    providers:
+      openai: gpt-5.6-terra
+  gpt-5.6-sol:
+    providers:
+      openai: gpt-5.6-sol
+  gpt-5.6-luna:
+    providers:
+      openai: gpt-5.6-luna
+  claude-sonnet-4-6:
+    providers:
+      anthropic: claude-sonnet-4-6
+  claude-opus-4-7:
+    providers:
+      anthropic: claude-opus-4-7
+  claude-opus-4-8:
+    providers:
+      anthropic: claude-opus-4-8
+  claude-sonnet-5:
+    providers:
+      anthropic: claude-sonnet-5
+  claude-opus-5:
+    providers:
+      anthropic: claude-opus-5
+  claude-fable-5-1:
+    providers:
+      anthropic: claude-fable-5-1
+
+harnesses:
+  grok: { type: grok }
+  codex: { type: codex }
+  claude-code: { type: claude-code }
+  opencode: { type: opencode }
+  pi: { type: pi }

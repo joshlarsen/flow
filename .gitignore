@@ -1,0 +1,9 @@
+node_modules/
+.generated/
+.wrangler/
+.env
+.env.*
+coverage/
+*.log
+tmp/
+src/generated-config.ts

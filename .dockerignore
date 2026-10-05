@@ -1,0 +1,11 @@
+*
+!Dockerfile
+!go.mod
+!go.sum
+!internal/
+!internal/runner/
+!internal/runner/*.go
+internal/runner/*_test.go
+!scripts/
+!scripts/patch-codex-acp-cache-write.mjs
+!scripts/probe-claude-code-model-capabilities.mjs

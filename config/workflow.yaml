@@ -1,0 +1,21 @@
+version: 1
+name: default
+memory: false
+workflow_timeout: 1h
+schedules: []
+defaults:
+  step_timeout: 15m
+  harness: pi
+  provider: openai
+  model: gpt-5.6-luna
+  reasoning_effort: medium
+steps:
+  - id: prepare
+    command: [bash, scripts/prepare.sh]
+    timeout: 30s
+  - id: report
+    prompt: report.md
+    allow_user_input: false
+    required_metrics:
+      - report:
+          - completed: Number of completed reports (emit 1 after writing the report)
